@@ -1,0 +1,607 @@
+type Query {
+
+  homeModules(input: HomeInput!): [Module!]!
+
+  listingModules(input: ListingInput!): [Module!]!
+
+  # Find Customer by Id
+  myProfile(input: CustomerInput!): Customer!
+
+  search(input: SearchInput!): SearchResult
+
+  searchV2(input: SearchInput!): SearchResponse
+
+  scrollSearch(input: SearchScrollInput!): ScrollableSearchResult
+
+  previewSearch(input: PreviewSearchInput!): PreviewSearchResponse
+
+  scrollPreviewSearch(input: PreviewSearchScrollInput!): ScrollableSearchResult
+
+  suggest(input: SuggestInput!): Suggestions!
+
+  previewSuggest(input: PreviewSuggestInput!): Suggestions!
+
+  mostSearchedTerms(input: MostSearchedTermsInput!): [MostSearchedTerm!]!
+
+  previewMostSearchedTerms(input: PreviewMostSearchedTermsInput!): [MostSearchedTerm!]!
+
+  productDetail(input: ProductInput!): ProductResult
+
+  productDetailByEan(input: ProductEanInput!): ProductResult
+
+  findRootCategories(input: AccessTokenInput!): [Category]
+
+  # Verify Email
+  verifyEmail(input: VerifyEmailInput!): VerifyEmailResult!
+
+  # Resend email for verification.
+  resendVerifyEmail(input : AccessTokenInput!): ResendVerifyEmailResult!
+
+  # Get all the Customer's addersses, according accessToken
+  findAddresses(input: AccessTokenInput) : [AddressType]
+
+  # Get a Customer adderss, according accessToken and id
+  getAddress(input: AddressIdInput!): AddressResponse
+
+  getPreferredAddress(input: AccessTokenInput!): AddressResponse
+
+  getCancelOptions(input: AccessTokenInput!): [CustomerCancelOptionReason]
+
+  # Find customer orders
+  findCustomerOrders(input: FindOrdersInput!): CustomerOrdersResult!
+
+  # Find unique customer order.
+  findCustomerOrder(input: FindSupplierOrderInput!): CustomerOrderResult!
+
+  findCustomerAndSupplierOrders(input : FindCustomerAndSupplierOrdersInput) : CustomerSupplierOrderResult!
+
+  # find preSigned url to get the customer legal document
+  findCustomerLegalDocument(input : FindCustomerLegalDocumentInput!) : PresignedObject!
+
+  # Get new prices and supplier availabities
+  refreshCart(input: RefreshCartInput!): CartResult!
+
+  # Synchronize customer products selection with current availability
+  syncCart(input: SyncCartInput!): SyncCartResult!
+
+  # Validate username
+  validateUsername(input: ValidateUsernameInput!): Boolean!
+
+  # Validate fields
+  validate(input: ValidateInput!): Boolean!
+
+  getPendingRatesCount(input: AccessTokenInput!): Int
+
+  customerHasOrders(input: AccessTokenInput!): Boolean
+
+  getSupplierRatings(input: GetSupplierRatingsInput!): SupplierRatingsResponse
+
+
+  getSupplierOrdersPendingToRate(input: AccessTokenInput!): [SupplierOrder]
+
+  getSupplierOrders(input: GetSupplierOrdersInput!): [SupplierOrder]
+
+  # -- Pending queries
+  getSupplier(input: GetSupplierInput!): SupplierResponse
+
+  getHomeBrands(input: GetHomeBrandsInput!): GetHomeBrandsResponse
+
+  previewHomeBrands(input: CoordinatesInput!): GetHomeBrandsResponse
+
+  previewRootCategories(input: CoordinatesInput!): RootCategoriesResponse
+
+  getCountryConfiguration(countryId: String!): [CountryConfigurationEntry]
+
+  getCustomerCountryConfiguration(accessToken: String!): [CountryConfigurationEntry]
+
+  getHomeCountries(input: CountryHomeInput!): [Country!]
+
+  getCountry(countryId: String!): Country
+
+  findCountry(input: CoordinatesInput!): Country
+
+  #rating
+
+  # Find supplier order rating
+  getSupplierOrder(input: GetSupplierOrderInput!): SupplierOrderResponse
+
+  #findOrderRatings
+
+  #findSupplierRatings
+
+  getPromotions(input:PromotionInput!) : PromotionResponse
+
+  previewPromotions(input: CoordinatesInput!): PromotionResult
+
+  getStatesByCountry(input: String!): [State]
+
+  getOrderPriceSummary(input: OrderSummaryInput!) : SummaryResult
+
+  getLandingPromotion(input: GetLandingPromotionInput!): GetLandingPromotionResult
+
+  previewLandingPromotion(input: CoordinatesInput!): GetLandingPromotionResult
+
+  getBannerDialog(input: String!): BannerDialogResult
+
+  validateOrder(input: ValidateOrderInput!): ValidateOrderResult
+
+  validateOrderV1(input: ValidateOrderInputV1!): ValidateOrderResultV1
+
+  validateOrderV2(input: ValidateOrderInputV2!): ValidateOrderResultV1
+
+  previewHomeSuppliers(input: CoordinatesInput!): HomeSupplierResult
+
+  getSuppliersThatHasSuggestedOrders(input: AccessTokenInput!): [SuppliersNameResult]
+
+  getSuggestedOrder(input: GetSuggestedOrderInput!): SuggestedOrderResult
+
+  findPendingRateSinceLastLogin(input: AccessTokenInput!): [SupplierOrder]
+
+  isValidPhone(input: IsValidPhoneInput!): Boolean
+
+  getPhoneStatus(input: PhoneInput!): PhoneStatusResult
+
+  findSupplierCreditBalances(input: FindSupplierCreditBalancesInput): PageResponse
+
+  isCountryCodeAndPhoneValid(input: IsPhoneValidInput!): Boolean
+
+  getMyBranchOffices(input: GetMyBranchOfficesInput): BranchOfficesResponse
+
+  getBranchOffice(input: GetBranchOfficeInput!): Customer
+
+  findMyExternalPayments(input: ExternalPaymentsInput!): ExternalPaymentsResult
+
+  requestForExternalPayment(input: RequestForExternalPaymentInput!): RequestForExternalPaymentResult
+
+  getCreditLines(input: CreditLinesRequestInput!): CreditLinesResult
+
+  findMyInvoices(input: FindMyInvoicesInput!): InvoicesResponse
+
+  findInvoice(input: FindInvoiceInput!): InvoiceRetailerResponse
+
+  getLatestInvoices(input: GetLatestInvoicesInput!): InvoiceRetailerResponse
+
+  downloadPDFInvoice(input: DownloadInvoiceInput!): String!
+
+  redeemableCoupons(request: RedeemableCouponsRequest!): RedeemableCouponsResponse
+
+}
+
+type Mutation {
+  preSignUp(input: PreSignUpInput!) : PreSignUpResult!
+
+  # User login
+  login(input: LoginInput!): LoginResult!
+
+  # Request for a challenge to change a user's login system, from classic login to passwordless login
+  challengeRequestForChangeToPasswordlessAuthentication(input: SignedChallengeDemandInput!): SignedChallengeDemandResult!
+  # Answer a challenge to change a user's login system, from classic login to passwordless login
+  challengeAnswerForChangeToPasswordlessAuthentication(input: SignedChallengeAnswer!): SignedChallengeAnswerResult!
+  # Request a challenge to login a user
+  challengeRequestForPasswordlessLogin(input: ChallengeDemandInput!): ChallengeDemandResult!
+  # Answer a challenge to login a user
+  challengeAnswerForPasswordlessLogin(input: ChallengeAnswer!): ChallengeAnswerResult!
+
+  # Refresh Credential from a logged user
+  refreshCredentials(input: RefreshCredentialsInput!): RefreshCredentialsResult!
+
+  # Change password from an existing user
+  changePassword(input: ChangePasswordInput!): ChangePasswordResult
+
+  # Reset password request
+  resetPassword(input: ResetPasswordRequestInput!): Void!
+
+  # Reset password confirm
+  resetPasswordConfirm(input: ResetPasswordConfirmInput!): ConfirmPasswordResult!
+
+  # Update Customer Profile
+  updateProfile(input: CustomerUpdateInput!): CustomerUpdateResult!
+  updateProfileV2(input: CustomerUpdateInputV2!): CustomerUpdateResult!
+
+  # Set Preferred Customer address
+  setPreferredAddress(input: PreferredAddressInput!): PreferredAddressResult!
+
+  # Add new Customer address
+  addAddress(input: AddressTypeUpsertInput!): AddAddressResult!
+
+  # Cancel pending orders
+  cancelOrder(input: CancelOrderInput!): CancelOrderResult!
+
+  # Cancel Reason
+  cancelOrderReason(input : CancelOrderInput!) : CancelOrderResonResult!
+
+  # Update Customer address
+  updateAddress(input: AddressTypeUpsertInput!) : UpdateAddressResult!
+
+  # Delete Customer address
+  deleteAddress(input: AddressIdInput!) : DeleteAddressResult!
+
+  # Creates an order
+  placeOrder(input: PlaceOrderInput!): PlaceOrderResult
+
+  # Creates an order
+  placeOrderV1(input: PlaceOrderInputV1!): PlaceOrderResult
+
+  #registro
+  signIn(input: SignInInput!): SignInResult
+  passwordlessSignUp(input: PasswordlessSignUpInput!): PasswordlessSignUpResult
+
+  # Registro
+  # El upload de imágenes / archivos solo permite los siguientes formatos:
+  # JPEG, PNG, PDF.
+  # En caso contrario, el error será: UNSUPPORTED_MEDIA_TYPE
+  uploadVerificationDocument(input: Document!): UploadDocumentResult
+
+  customerRateSupplier(input: CustomerRateSupplierInput!): CustomerRateSupplierResult
+
+  customerReportRate(input: CustomerReportRateInput!): CustomerReportRateResult
+
+  enableWhatsApp(input: AccessTokenInput!): Void!
+
+  disableWhatsApp(input: AccessTokenInput!): Void!
+
+  userDevice(input: UserDeviceInput!): Void!
+
+  deleteUserDevice(input: DeleteUserDeviceInput!): Void!
+
+  markSuggestionAsRead(input: MarkSuggestionInput !): Void!
+
+  acceptTc(input: AcceptTcInput!): Void!
+
+  setFavouriteProduct(input: FavouriteProductInput): Boolean!
+
+  unsetFavouriteProduct(input: FavouriteProductInput): Boolean!
+
+  supplierLead(input: SupplierLeadInput): Boolean!
+
+  enableBranchOffice(input: EnableBranchOfficeInput!): Void!
+
+  disableBranchOffice(input: DisableBranchOfficeInput!): Void!
+
+  addBranchOffice(input: AddBranchOfficeInput!): AddBranchOfficeResult!
+
+  updateBranchOfficeProfile(input: UpdateBranchOfficeProfileInput!): Customer!
+
+  loanPayment(input: LoanPaymentRequestInput!): LoanPaymentResult!
+
+  createDigitalPayment(input: CreateDigitalPaymentInput!): CreateDigitalPaymentResult
+
+  finalizeDigitalPayment(input: FinalizeDigitalPaymentInput!): FinalizeDigitalPaymentResult
+
+}
+
+scalar NonEmptyString
+scalar LanguageTag
+scalar PosIntEqualsOrLessThan10
+scalar Long
+
+input CustomerRateSupplierInput {
+  accessToken: String!
+  supplierOrderId: Int!,
+  supplierId: Int!,
+  score: Int!
+  opinion: String
+}
+
+input CustomerReportRateInput {
+  accessToken: String!
+  rateId: Int!
+}
+
+
+enum CustomerRateSupplierFailedReason {
+  SUPPLIER_ALREADY_RATED_BY_CUSTOMER,
+  INVALID_RATE,
+  INVALID_SUPPLIER_ORDER
+  INVALID_SUPPLIER_ID
+  INVALID_SCORE
+
+}
+
+enum CustomerReportRateFailedResult {
+  RATE_NOT_FOUND
+}
+
+type CustomerReportRateFailer {
+  reason: CustomerReportRateFailedResult!
+}
+
+type CustomerRateSupplierFailed {
+  reason: CustomerRateSupplierFailedReason!
+}
+
+type CustomerReportRateFailed {
+  reason: CustomerReportRateFailedResult!
+}
+
+union CustomerRateSupplierResult = Void | CustomerRateSupplierFailed
+
+union CustomerReportRateResult = Void | CustomerReportRateFailed
+
+
+enum PageSize {
+  ZERO
+  ONE
+  TEN
+  TWENTY
+  FIFTY
+  ONE_HUNDRED
+}
+
+enum PreSignUpFailedReason {
+  INVALID_CAPTCHA,
+  PHONE_ALREADY_EXIST,
+  EMAIL_ALREADY_EXIST
+}
+
+enum UsernameRegistrationReason {
+  INVALID_FIRST_NAME,
+  INVALID_LAST_NAME,
+  INVALID_USERNAME,
+  DUPLICATE_USERNAME,
+  INVALID_FIRST_NAME_LENGTH,
+  INVALID_LAST_NAME_LENGTH,
+  INVALID_USERNAME_LENGTH
+}
+
+enum CompleteProfileReason {
+  # Generic Error
+  PROFILE_ERROR
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+input PageInput {
+  # número de pagina comienza en 1
+  number: Int!
+  size: PageSize!
+}
+
+input ListUsersInput {
+  query: String
+  page: PageInput!
+  accessToken: String!
+}
+
+input ListMyFavoritesInput {
+  page: PageInput!
+  accessToken: String!
+}
+
+input CompleteProfileInput {
+  document: String!
+  phone: String!
+  address: String!
+  recaptchaResponse: String!
+  accessToken: String!
+}
+
+input UsernameInput {
+  userId: ID!
+  accessToken: String!
+}
+
+
+input ListGroupsInput {
+  authType: AuthType!
+  accessToken: String!
+}
+
+
+# Se requiere un ID sin accessToken
+input IdInput {
+  id: ID!
+}
+
+input UserInput {
+  id: ID!
+  accessToken: String!
+}
+
+input UploadImageInput {
+  encodedFile: String!
+  accessToken: String!
+
+}
+
+input AccessTokenInput {
+  accessToken: String!
+}
+
+type PreSignUpFailed {
+  reason: PreSignUpFailedReason!
+}
+
+type UsernameRegistrationFailed {
+  reason: UsernameRegistrationReason!
+}
+
+type RegisterFailed {
+  registerReason: RegisterFailureReason!
+}
+
+type ProfileCredentials {
+  accessToken: String!
+}
+
+type CompleteProfileFailed {
+  reason: CompleteProfileReason
+}
+
+type Sort{
+  field: String!
+  direction: String!
+}
+type Facet{
+  id: String!
+  name: String!
+  slices: [Slices]
+}
+
+type Slices{
+  size: Int!
+  obj: Slice
+}
+
+type Slice {
+  id: String!
+  name(languageTag: LanguageTag): String!
+  key: String!
+}
+
+input UpdateBoostInput {
+  id: ID!
+  boost: ID!
+  accessToken: String!
+}
+
+input FacetFilter{
+  key: String!
+  value: String!
+}
+
+input ValidateUsernameInput{
+  id: ID
+  username: String!
+}
+
+input ValidateInput{
+  id: ID
+  value: String!
+  country_id: String!
+  accessToken: String
+  validationType: ValidationType!
+}
+
+input UserDeviceInput{
+  pushToken: String!
+  accessToken: String!
+  os: String
+  appVersion: String
+}
+
+input DeleteUserDeviceInput{
+  accessToken: String!
+  pushToken: String
+}
+
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+  countryId: String
+}
+
+input MarkSuggestionInput {
+  accessToken: String!
+  supplierIds: [Int]!
+}
+
+enum ValidationType{
+  USER_PHONE,
+  USER_CELL_PHONE,
+  USER_USERNAME,
+  CUSTOMER_LEGAL_ID,
+  CUSTOMER_LINE_PHONE
+}
+
+
+enum AddAddressFailedReason {
+  INVALID_GOOGLE_ADDRESS,
+  INVALID_LATITUDE,
+  INVALID_LONGITUDE,
+  CUSTOMER_ALREADY_HAS_LEGAL_ADDRESS
+  INVALID_STATE,
+  INVALID_ADDRESS_NAME
+  INVALID_ADDRESSES
+}
+
+
+type AddAddressFailed {
+  reason: AddAddressFailedReason!
+}
+
+enum AddBranchOfficeFailedReason {
+  PHONE_ALREADY_EXIST,
+  EMAIL_ALREADY_EXIST
+}
+
+type AddBranchOfficeFailed{
+  reason: AddBranchOfficeFailedReason!
+}
+
+enum DeleteAddressFailedResult {
+  NOT_ADDRESS_CUSTOMER
+}
+
+type SiteConfigurationFailed {
+  reason: SiteConfigurationFailedReason!
+}
+
+enum SiteConfigurationFailedReason {
+  NOT_FOUND
+}
+
+type DeleteAddressFailed {
+  reason: DeleteAddressFailedResult!
+}
+
+type BannerDialog {
+  dialog: Dialog
+  banner: Banner
+}
+
+type Dialog {
+  image: String
+  dialogContent: [DialogContent]!
+}
+
+type Banner {
+  bannerContent: [BannerContent]!
+}
+
+type BannerContent {
+  content: String
+  lang: String!
+}
+
+type DialogContent {
+  title: String
+  text: String
+  lang: String!
+}
+
+union PhoneStatusResult = PhoneStatus | TooManyRequests
+
+union PreSignUpResult = PreSignUpFailed | Void
+
+union UsernameRegistrationResult = UsernameRegistrationFailed | Void
+
+union CustomerUpdateResult = CustomerErrorFailed  | Customer
+
+union VerifyEmailResult = CustomerErrorFailed | Void
+
+union ResendVerifyEmailResult = CustomerErrorFailed | Void
+
+union PreferredAddressResult = CustomerErrorFailed | Void
+
+union UpdateAddressResult = CustomerErrorFailed | Void
+
+union DeleteAddressResult = DeleteAddressFailed | Void
+
+union AddAddressResult = AddAddressFailed | Void
+
+union SignInResult = SignInFailed | GenericCredentials
+union PasswordlessSignUpResult = PasswordlessSignUpFailed | Customer
+
+union BannerDialogResult = SiteConfigurationFailed | BannerDialog
+
+union AddBranchOfficeResult = AddBranchOfficeFailed | Customer
+
+input MillisecondsPeriodInput {
+  from: Long,
+  to: Long
+}

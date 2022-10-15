@@ -1,0 +1,446 @@
+input SearchInput {
+  accessToken: String!,
+  addressId: Int,
+  keyword: String,
+  sort: String,
+  sortDirection: SortInput,
+  category: Int,
+  page: Int,
+  size: Int,
+  brand: Int,
+  tag: String,
+  features: [FeatureInput]
+  supplier: Int,
+  favourites: Boolean
+  similarTo: Int
+  promoted: Boolean
+  discount: Int
+  commercialPromotion: String
+  purchased: Boolean
+  collection: String
+  bottler: Int
+}
+
+input SearchScrollInput {
+  accessToken: String!,
+  scroll: String!
+}
+
+input PreviewSearchInput {
+  keyword: String,
+  sort: String,
+  sortDirection: SortInput,
+  category: Int,
+  page: Int,
+  size: Int,
+  brand: Int,
+  supplier: Int,
+  tag: String,
+  features: [FeatureInput]
+  lat: Float!,
+  lng: Float!
+  countryId: String
+  similarTo: Int
+  promoted: Boolean
+  discount: Int
+  commercialPromotion: String
+  collection: String
+  bottler: Int
+}
+
+input PreviewSearchScrollInput {
+  scroll: String!
+}
+
+input SuggestInput {
+  accessToken: NonEmptyString!,
+  keyword: NonEmptyString!,
+  languageTag: LanguageTag
+  favourites: Boolean
+  category: Int
+}
+
+input PreviewSuggestInput {
+  lat: Float!,
+  lng: Float!
+  country: String
+  keyword: NonEmptyString!,
+  languageTag: LanguageTag
+  favourites: Boolean
+  category: Int
+}
+
+input MostSearchedTermsInput {
+  accessToken: NonEmptyString!
+}
+
+input PreviewMostSearchedTermsInput {
+  lat: Float!,
+  lng: Float!
+  country: String
+}
+
+input FeatureInput {
+  id: String,
+  value: String
+}
+
+enum SortInput {
+  DESC,
+  ASC,
+  DEFAULT
+}
+
+enum SearchFailedReason {
+  INVALID_ADDRESS,
+  INVALID_LOCATION,
+  FORBIDDEN,
+  NO_SUPPLIERS_FOUND
+}
+
+type SearchFailed {
+  reason: SearchFailedReason!
+}
+
+union SearchResponse = SearchResult | SearchFailed
+
+union PreviewSearchResponse = PreviewSearchResult | SearchFailed
+
+type SearchResult {
+  header: Header!
+  sort: Sort!
+  breadcrumb: [BreadCrumb]!
+  filters: [Filter]
+  products: [ProductSearch]
+  facets: [Facet]
+}
+
+type ScrollableSearchResult {
+  scroll: String,
+  products: [ProductSearch]
+}
+
+type PreviewSearchResult {
+  header: Header!
+  sort: Sort!
+  breadcrumb: [BreadCrumb]!
+  filters: [Filter]
+  products: [PreviewProductSearch]
+  facets: [Facet]
+}
+
+type Suggestions {
+  products(size: PosIntEqualsOrLessThan10!): [SuggestedProduct!]!
+  brands(size: PosIntEqualsOrLessThan10!): [SuggestedBrand!]!
+  categories(size: PosIntEqualsOrLessThan10!): [SuggestedCategory!]!
+  suppliers(size: PosIntEqualsOrLessThan10!): [SuggestedSupplier!]!
+}
+
+type SuggestedProduct {
+  id: Int!
+  name: NonEmptyString!
+}
+
+type SuggestedBrand {
+  id: Int!
+  name: NonEmptyString!
+  logo: NonEmptyString
+}
+
+type SuggestedCategory {
+  id: Int!
+  name: NonEmptyString!
+}
+
+type SuggestedSupplier {
+  id: Int!
+  name: NonEmptyString!
+  avatar: NonEmptyString
+}
+
+type MostSearchedTerm {
+  text: String!
+  language: String
+  category: Category!
+  label(languageTag: LanguageTag!): String!
+}
+
+type Filter{
+  key: String!
+  values: [FilterItem]
+  value(languageTag: LanguageTag): String
+}
+
+type FilterItem {
+  id: Int!
+  name(languageTag: LanguageTag): String!
+}
+
+type Header {
+  total: Int!
+  pageSize: Int!
+  currentPage: Int!
+  scroll: String
+}
+
+type BreadCrumb {
+  id: Int!
+  name: String!
+}
+
+type PreviewProductSearch {
+  id: ID!
+  name: String!
+  enabled: Boolean!
+  category: Category
+  brand: Brand!
+  ean: String
+  description: String
+  images: [Image]!
+  photos(size: ProductImageSize!, take: Int): [String!]!
+  created: TimestampOutput!
+  manufacturer: Manufacturer
+  prices: [PreviewPrice]
+  priceFrom: PreviewPrice
+  minUnitsPrice: PreviewPrice
+  highlightedPrice: PreviewPrice
+  title: String
+  suppliers: [PreviewSupplier]
+  totalNumberOfSuppliers: Int!
+  country_id: String!
+}
+
+type PreviewPrice {
+  id: Int!
+  value: Float
+  valueMoney: Money
+  unitValue: Float
+  unitValueMoney: Money
+  display: Display
+  minUnits: Int
+  commercialPromotion: CommercialPromotion
+  commercialPromotions: CommercialPromotions
+}
+
+enum SupplierAvatarSize {
+  SIZE_120x50, SIZE_96x40, SIZE_22x22
+}
+
+type PreviewSupplier {
+  id: Int!
+  name: String!
+  legalName: String
+  avatar(size: SupplierAvatarSize): String
+}
+
+enum ProductImageSize {
+  SIZE_148x148, SIZE_85x85, SIZE_96x96
+}
+
+type ProductSearch {
+  id: Int!
+  name: String!
+  enabled: Boolean!
+  category: Category
+  brand: Brand!
+  ean: String
+  description: String
+  images: [Image]!
+  photos(size: ProductImageSize!, take: Int): [String!]!
+  displays: [Display]
+  manufacturer: Manufacturer
+  prices: [Price]
+  title: String
+  priceFrom: Price
+  minUnitsPrice: Price
+  highlightedPrice: Price
+  favorite: Boolean!
+  country_id: String!
+}
+
+type Display {
+  id: Int!
+  ean: String!
+  units: Int!
+}
+
+type Feature {
+  id: Int!
+  name: String!
+  required: Boolean!
+  hasUnit: Boolean!
+  featureType: FeatureType
+  value: FeatureValue
+}
+
+type FeatureValue {
+  id: Int!
+  name: String
+  unit: MeasurementUnit
+  enabled: Boolean
+}
+
+type MeasurementUnit {
+  id: Int!
+  name: String!
+  enabled: Boolean
+}
+
+enum FeatureType {
+  SINGLE,
+  MULTIPLE,
+  BINARY,
+  RANGE
+}
+
+type Image {
+  id: String!
+  originalName: String
+  imageOrder: Int
+  added: TimestampOutput
+}
+
+type WabipayConfiguration {
+  order_percentage_cap: Int!
+  use_wabipay_cap: Boolean!
+}
+
+type Supplier {
+  id: Int!
+  name: String!
+  legalName: String
+  avatar(size: SupplierAvatarSize): String
+  enabled: Boolean
+  phone: String
+  legalId: String
+  address: String
+  postalCode: String
+  rating: RatingScore
+  country_id: String
+  deliveryZones: [DeliveryZone]
+  averageDeliveryDay : String
+  wabipayConfiguration: WabipayConfiguration
+}
+
+type DeliveryZone {
+  id: Int!
+  minAmount: Float!
+  minAmountMoney: Money!
+  maxAmount: Float!
+  maxAmountMoney: Money!
+  deliveryCost: Float!
+  deliveryCostMoney: Money!
+}
+
+type Coordinate {
+  lat: Float!
+  lng: Float!
+}
+
+type Manufacturer {
+  id: Int!
+  name: String!
+  enabled: Boolean!
+  phone: String
+  avatar: String
+  country_id: String!
+}
+
+type Price {
+  id: Int!
+  supplier: Supplier
+  value: Float
+  valueMoney: Money
+  unitValue: Float
+  unitValueMoney: Money
+  updated: TimestampOutput
+  enabled: Boolean
+  maxUnits: Int
+  minUnits: Int
+  display: Display
+  promotions: [Promotion]
+  configuration: SupplierProductConfiguration
+  commercialPromotion: CommercialPromotion
+  commercialPromotions: CommercialPromotions
+}
+
+type SupplierProductConfiguration {
+  disableMinAmountCount: Boolean!
+}
+
+input ProductInput {
+  productId : Int!
+  accessToken: String!
+}
+
+
+input ProductEanInput {
+  ean: String!
+  accessToken: String!
+}
+
+
+enum ProductErrorReason {
+  PRODUCT_NOT_FOUND,
+  BAD_REQUEST
+}
+
+type ProductFailed {
+  reason: ProductErrorReason!
+}
+
+enum PriceErrorReason {
+  PRICE_NOT_FOUND,
+  NO_SUPPLIER_FOUND
+}
+
+type PriceFailed {
+  reason: PriceErrorReason!
+}
+
+type Product {
+  id: Int!
+  name: String!
+  enabled: Boolean!
+  category: Category!
+  brand: Brand!
+  ean: String
+  description: String
+  features: [Feature]
+  images: [Image]!
+  created: TimestampOutput!
+  manufacturer: Manufacturer
+  prices: [Price]
+  displays: [Display]
+  title: String
+  priceFrom: Price
+  highlightedPrice: Price
+  minUnitsPrice: Price
+  country_id: String!
+  favorite: Boolean!
+}
+
+type Prices {
+  prices: [Price]!
+}
+
+union ProductResult = Product | ProductFailed
+
+enum PreviewSupplierFailedReason {
+  INVALID_LOCATION
+  NOT_FOUND
+  BAD_REQUEST
+  INVALID_COUNTRY_ID
+  NO_SUPPLIERS_FOUND
+}
+
+type PreviewHomeSupplierFailed {
+  reason: PreviewSupplierFailedReason!
+}
+
+
+type PreviewHomeSupplierResponse {
+  suppliers: [PreviewSupplier]!
+}
+
+union HomeSupplierResult = PreviewHomeSupplierResponse | PreviewHomeSupplierFailed

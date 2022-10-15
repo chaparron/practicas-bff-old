@@ -1,0 +1,293 @@
+enum Site {
+  CUSTOMER
+  SUPPLIER
+  MANUFACTURER
+  BO
+}
+
+enum VoidReason {
+  SUCCESS
+}
+
+enum LoginFailureReason {
+  FORBIDDEN
+  UNAUTHORIZED
+  # When a user who already uses passwordless tries to log in with his email and a password
+  PASSWORDLESS_REQUIRED
+}
+
+enum SignedChallengeDemandFailureReason {
+  # When the user tries to migrate to passwordless login using a "countryCode-phone" that is occupied by another user
+  PHONE_ALREADY_EXISTS
+  # When a user who has already migrated to passwordless login uses this mutation. It should use 'challengeRequestForPasswordlessLogin'
+  USER_ALREADY_USES_PASSWORDLESS
+  # When the phone number is not registered in WhatsApp
+  WHATS_APP_CONTACT_NOT_FOUND
+
+  # Token is not valid
+  UNAUTHORIZED
+
+  FORBIDDEN
+}
+
+enum ChallengeDemandFailureReason {
+  # When no user exists with the provided 'countryCode-phone'
+  UNKNOWN_PHONE
+  # When the phone number is not registered in WhatsApp
+  WHATS_APP_CONTACT_NOT_FOUND
+}
+
+enum ChallengeAnswerFailureReason {
+  # Challenge not resolved
+  UNAUTHORIZED
+  # The challenge can no longer be solved
+  EXPIRED_CHALLENGE
+  # User already answer this challenge and is verified
+  USER_ALREADY_USES_PASSWORDLESS
+
+  INCORRECT_CODE @deprecated(reason: "Now returns: UNAUTHORIZED")
+  MAX_ATTEMPTS_REACHED @deprecated(reason: "Now returns: EXPIRED_CHALLENGE")
+  UNKNOWN_CHALLENGE_ID @deprecated(reason: "Now returns: EXPIRED_CHALLENGE")
+}
+
+enum RegisterFailureReason {
+  PASSWORD_MISMATCH
+  DUPLICATE_USERNAME
+  INVALID_NAME
+  INVALID_SURNAME
+  INVALID_VERIFICATION_DOCUMENTS
+  MISSING_REQUIRED_VERIFICATION_DOCUMENT
+}
+
+enum AuthType {
+  USER
+  ADMIN
+}
+enum ChangePasswordReason {
+  PASSWORD_MISMATCH
+  # When a user who has already migrated to passwordless login tries to change his password
+  CANNOT_CHANGE_PWD
+}
+
+enum ResetPasswordReason {
+  # When a user who has already migrated to passwordless login tries to reset his password
+  CANNOT_CHANGE_PWD
+}
+
+enum ConfirmPasswordReason {
+  TOKEN_EXPIRED
+  # When a user who has already migrated to passwordless login tries to confirm his password
+  CANNOT_CHANGE_PWD
+}
+
+enum EntityType {
+  CUSTOMER,
+  USER
+}
+
+enum PhoneStatusType {
+  UNKNOWN_PHONE,
+  PASSWORDLESS_USER,
+  EMAIL_USER
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+  accessToken: String!
+}
+
+input ResetPasswordRequestInput {
+  username: String!
+}
+
+input ResetPasswordConfirmInput {
+  token: String!
+  password: String!
+  user_id: ID!
+}
+
+input RefreshCredentialsInput {
+  refreshToken: String!
+}
+
+input PreSignUpInput {
+  name: String!
+  lastName: String!
+  countryCode: String!
+  phone: String!
+  recaptchaResponse: String!
+  alternativePhone: String
+  email: String
+  country: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  supportLegacy: Boolean
+  site: Site!
+}
+
+input SignedChallengeDemandInput {
+  # International telephone prefix for 'phone'
+  countryCode: String!
+  phone: String!
+  accessToken: String!
+  channel: ChannelType
+}
+
+input IsPhoneValidInput {
+  # International telephone prefix for 'phone'
+  countryCode: String!
+  phone: String!
+  accessToken: String!
+}
+
+input SignedChallengeAnswer {
+  challengeId: String!
+  challengeAnswer: String!
+  accessToken: String!
+}
+
+enum ChannelType {
+  SMS,
+  WHATSAPP
+}
+
+input PhoneInput {
+  countryCode: String!
+  phone: String!
+}
+
+input ChallengeDemandInput {
+  # International telephone prefix for 'phone'
+  countryCode: String!
+  phone: String!
+  channel: ChannelType
+}
+
+input ChallengeAnswer{
+  challengeId: String!
+  challengeAnswer: String!
+}
+
+type Void {
+  voidReason: VoidReason!
+  entityType: EntityType
+  id: ID
+}
+
+type GenericCredentials {
+  username: String!
+  credentials: Credentials!
+  customer: Customer
+}
+
+type LegacyCredentials {
+  username: String!
+  credentials: Credentials!
+  customer: Customer
+}
+
+# It will be used in the future, when the classic login is no longer available
+type UpgradeRequired {
+  credentials: Credentials!
+}
+
+type Challenge {
+  challengeId: String!
+}
+
+type PhoneStatus {
+  status: PhoneStatusType!
+}
+
+type LoginFailed {
+  reason: LoginFailureReason!
+}
+
+type SignedChallengeDemandFailed{
+  reason: SignedChallengeDemandFailureReason!
+}
+
+type ChallengeDemandFailed{
+  reason: ChallengeDemandFailureReason!
+}
+
+type ChallengeAnswerFailed {
+  reason: ChallengeAnswerFailureReason!
+}
+
+# When the SMS sending service indicates there have been too many messages for a phone or for an IP
+type TooManyShipments{
+  # Time to wait in seconds
+  waitTime: Int!
+}
+
+type TooManyRequests {
+  error: String
+}
+
+type RefreshCredentials {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Credentials {
+  accessToken: String!
+  refreshToken: String!
+  tokenType: String!
+  scope: String!
+  expiresIn: String!
+}
+
+
+type ChangePasswordFailed {
+  reason: ChangePasswordReason!
+}
+
+type ResetPasswordDemandFailed {
+  reason: ResetPasswordReason!
+}
+
+type ConfirmPasswordFailed {
+  confirmPasswordReason: ConfirmPasswordReason!
+}
+
+type UserCredentials {
+  enabled: Boolean
+}
+
+type User {
+  id: ID!
+  username: String
+  firstName: String
+  lastName: String
+  acceptWhatsApp: Boolean
+  countryCode: String
+  phone: String
+  email: String
+  credentials: UserCredentials
+  usesPasswordless: Boolean
+  created: TimestampOutput
+  isTOSAccepted: Boolean!
+  trackingId: String!
+}
+
+
+union ChangePasswordResult = ChangePasswordFailed | Void
+
+union ConfirmPasswordResult = ConfirmPasswordFailed | Void
+
+union LoginResult = LoginFailed | GenericCredentials | UpgradeRequired  | LegacyCredentials
+
+union SignedChallengeDemandResult = SignedChallengeDemandFailed | Challenge | TooManyShipments
+
+union SignedChallengeAnswerResult = ChallengeAnswerFailed | GenericCredentials
+
+union ChallengeDemandResult = ChallengeDemandFailed | Challenge | TooManyShipments
+
+union ChallengeAnswerResult = ChallengeAnswerFailed | GenericCredentials
+
+union RefreshCredentialsResult = LoginFailed | RefreshCredentials

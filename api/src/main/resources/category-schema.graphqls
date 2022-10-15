@@ -1,0 +1,26 @@
+
+type RootCategoriesResult {
+    categories: [Category]!
+}
+
+union RootCategoriesResponse =  RootCategoriesResult | RootCategoriesFailed
+
+type RootCategoriesFailed {
+    reason: RootCategoriesFailedReason!
+}
+
+enum RootCategoriesFailedReason {
+    BAD_REQUEST
+    INVALID_LOCATION
+    NO_SUPPLIERS_FOUND
+}
+
+
+type Category {
+    id: Int!,
+    parentId: Int,
+    isLeaf: Boolean!,
+    name: String!
+    enabled: Boolean!
+    country_id: String!
+}

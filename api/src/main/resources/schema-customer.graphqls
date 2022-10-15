@@ -1,0 +1,492 @@
+enum CustomerStatus {
+  PENDING,
+  REJECTED,
+  APPROVED
+}
+
+enum AddressMode {
+  LEGAL,
+  DELIVERY
+}
+
+enum VerificationDocumentType {
+  IB,
+  AFIP,
+  ID_FRONT,
+  ID_BACK
+}
+
+enum CustomerErrorReason {
+  PHONE_ALREADY_EXIST
+  TOKEN_EXPIRED
+  NO_VERIFICATION_EMAIL_PENDING
+  NO_VERIFICATION_SMS_PENDING
+  NOT_ADDRESS_CUSTOMER
+  CANNOT_SET_LEGAL_ADDRESS_AS_PREFERRED
+  INVALID_DELIVERY_ADDRESS_COUNT
+  INVALID_ADDRESSES,
+  INVALID_STATE
+}
+
+enum SignInFailedReason{
+  PHONE_ALREADY_EXIST
+  LEGAL_ID_ALREADY_EXIST
+  NAME_ALREADY_EXIST
+  USERNAME_ALREADY_EXIST
+  INVALID_ADDRESS
+  INVALID_ADDRESSES
+  INVALID_STATE
+  INVALID_PREFERRED_ADDRESS
+  INVALID_POSTAL_CODE
+}
+enum PasswordlessSignUpFailedReason{
+  PHONE_ALREADY_EXIST
+  LEGAL_ID_ALREADY_EXIST
+  NAME_ALREADY_EXIST
+  USERNAME_ALREADY_EXIST
+  INVALID_ADDRESS
+  INVALID_ADDRESSES
+  INVALID_STATE
+  INVALID_PREFERRED_ADDRESS
+  EMAIL_ALREADY_EXIST
+  INVALID_POSTAL_CODE
+  INVALID_COUNTRY
+  INVALID_CAPTCHA
+  INVALID_LEGAL_ID
+}
+
+enum DeliveryPreference {
+  MORNING,
+  AFTERNOON,
+  NO_PREFERENCE
+}
+
+input CustomerInput {
+  accessToken: String!
+}
+
+input VerificationDocumentInput {
+  id: ID
+  type: VerificationDocumentType
+}
+
+input WorkingDaysInput {
+  days: [DayInput]!
+  hours: [HourRangeInput]!
+}
+
+
+input DayInput {
+  dayIndex: Int!
+  selected: Boolean!
+}
+
+input HourRangeInput {
+  from: String!
+  to: String!
+}
+
+
+input StateInput {
+  id: ID
+  name: String
+}
+
+
+input AddressTypeInput {
+  id: ID
+  formatted: String!
+  state: StateInput
+  lat: Float!
+  lon: Float!
+  postalCode: String!
+  additionalInfo: String
+  addressType: AddressMode!
+}
+
+input AddressTypeUpsertInput {
+  id: ID
+  formatted: String!
+  state: StateInput
+  lat: Float!
+  lon: Float!
+  postalCode: String
+  additionalInfo: String
+  addressType: AddressMode!
+  accessToken: String!
+}
+
+input UserCredentialsPasswordlessSignUpInput {
+  enabled: Boolean
+}
+input UserCredentialsSignInInput {
+  password: String!
+  enabled: Boolean!
+}
+
+input SignInUserInput {
+  id: ID
+  username: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  acceptWhatsApp: Boolean
+  credentials: UserCredentialsSignInInput!
+}
+input PasswordlessSignUpUserInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  countryCode: String!
+  phone: String!
+  email: String
+  acceptWhatsApp: Boolean
+  credentials: UserCredentialsPasswordlessSignUpInput!
+}
+
+input SignInInput {
+  id: ID
+  name: String!
+  legalId: String!
+  linePhone: String
+  user: SignInUserInput!
+  addresses: [AddressTypeInput]!
+  verificationDocuments: [VerificationDocumentInput]!
+  workingDays: WorkingDaysInput
+  deliveryComment: String
+  country_id: String
+  marketingEnabled: Boolean
+}
+input PasswordlessSignUpInput {
+  id: ID
+  name: String!
+  legalId: String!
+  linePhone: String
+  user: PasswordlessSignUpUserInput!
+  addresses: [AddressTypeInput]!
+  verificationDocuments: [VerificationDocumentInput]!
+  workingDays: WorkingDaysInput
+  deliveryComment: String
+  country_id: String!
+  marketingEnabled: Boolean
+  captchaToken: String!
+}
+
+input EnableBranchOfficeInput {
+  accessToken: String!
+  branchOfficeId: ID!
+}
+
+input DisableBranchOfficeInput {
+  accessToken: String!
+  branchOfficeId: ID!
+}
+
+enum AddressFailedReason {
+  ADDRESS_NOT_FOUND
+}
+
+type AddressFailed {
+  reason: AddressFailedReason!
+}
+
+union AddressResponse = AddressType | AddressFailed
+
+
+input AddressIdInput {
+  address_id : ID!
+  accessToken: String!
+}
+
+input CustomerUpdateInput {
+  phone: String
+  username: String
+  acceptWhatsApp: Boolean
+  workingDays: WorkingDaysInput
+  deliveryComment: String
+  verificationDocuments: [VerificationDocumentInput]
+  accessToken: String!
+  marketingEnabled: Boolean
+}
+input CustomerUpdateInputV2 {
+  username: String
+  acceptWhatsApp: Boolean
+  workingDays: WorkingDaysInput
+  deliveryComment: String
+  verificationDocuments: [VerificationDocumentInput]
+  accessToken: String!
+  marketingEnabled: Boolean
+}
+
+input AddBranchOfficeInput {
+  accessToken: String!
+  name: String!
+  emailVerification: Boolean
+  linePhone: String
+  firstName: String!
+  lastName: String!
+  countryCode: String!
+  phone: String!
+  email: String
+  address: AddressTypeInput!
+  workingDays: WorkingDaysInput!
+  deliveryComment: String
+  verificationDocs: [VerificationDocumentInput]
+  acceptWhatsApp: Boolean
+  marketingEnabled: Boolean
+}
+
+input UpdateBranchOfficeProfileInput {
+  accessToken: String!
+  branchOfficeId: String!
+  acceptWhatsApp: Boolean
+  marketingEnabled: Boolean
+}
+
+input VerifyEmailInput {
+  id: ID!
+  token: String!
+}
+
+input IsValidPhoneInput {
+  phone: String!
+  countryCode: String!
+}
+
+input PreferredAddressInput {
+  addressId: ID!
+  accessToken: String!
+
+}
+
+input AcceptTcInput {
+  marketingEnabled: Boolean
+  accessToken: String
+}
+
+
+input FindMyInvoicesInput {
+  accessToken: String!
+  fromEpochMillis: Long!
+  toEpochMillis: Long!
+  cursor: String
+}
+
+
+input FindInvoiceInput {
+  accessToken: String!
+  id: ID!
+}
+
+input GetLatestInvoicesInput {
+  accessToken: String!
+}
+
+input DownloadInvoiceInput {
+  accessToken: String!
+  id: String!
+}
+
+type State {
+  id: ID!
+  name: String!
+}
+
+type AddressType {
+  id: ID!
+  formatted: String!
+  lat: Float!
+  lon: Float!
+  additionalInfo: String
+  preferred: Boolean
+  addressType: AddressMode
+  enabled: Boolean!
+  state: State
+  postalCode: String
+}
+
+type VerificationDocument {
+  id: ID!
+  type: VerificationDocumentType!
+}
+
+type RatingScore {
+  average: Float!
+  count: Int!
+  percentage: Float
+}
+
+
+type CustomerType {
+  id: String!
+  @deprecated(reason: "Use code instead")
+  code: String!
+  name: String!
+}
+
+type Customer {
+  id: ID
+  name: String!
+  enabled: Boolean!
+  legalId: String!
+  linePhone: String
+  customerStatus: CustomerStatus!
+  user: User!
+  smsVerification: Boolean!
+  emailVerification: Boolean!
+  addresses: [AddressType]
+  verificationDocuments: [VerificationDocument]
+  deliveryPreference: DeliveryPreference
+  workingDays: WorkingDays!
+  rating: RatingScore
+  level: Int
+  missingDocuments: [String]
+  # Needed for temporal retrocompatibility:
+  @deprecated country_id: String!
+  country: Country!
+  customerType: CustomerType!
+  hasOrders: Boolean
+  marketingEnabled: Boolean!
+  storeType: StoreType!
+  storeOwnerId: Long
+  permissionOnBranchOffice: Boolean
+  legalAsDelivery: Boolean
+  profileSections: [ProfileSection!]
+}
+
+enum StoreType {
+  MAIN_OFFICE, BRANCH_OFFICE
+}
+
+type WorkingDays {
+  days: [Day]!
+  hours: [HourRange]!
+}
+
+type Day {
+  dayIndex: Int!
+  selected: Boolean!
+}
+
+type HourRange {
+  from: String!
+  to: String!
+}
+
+type CustomerErrorFailed {
+  customerErrorReason : CustomerErrorReason!
+}
+
+type SignInFailed {
+  reason: SignInFailedReason!
+}
+type PasswordlessSignUpFailed {
+  reason: PasswordlessSignUpFailedReason!
+}
+
+type SuppliersNameResult {
+  id: Int!
+  supplierId: Int!
+  supplierName: String!
+  supplierAvatar: String
+  productsQuantity: Int!
+  readDate: String
+  lastUpdate: String!
+}
+
+input GetSuggestedOrderInput {
+  accessToken: String!
+  supplierId: Int!
+}
+
+type SuggestedOrderResult {
+  id: Int!
+  customerId: Int!
+  supplierId: Int!
+  readDate: String
+  lastUpdate: String!
+  supplierName: String!
+  items: [SuggestedOrderItem]! @deprecated(reason: "will be replaced with 'products'")
+  products: [SuggestedOrderProduct!]!
+}
+
+type SuggestedOrderItem {
+  productId: Int!
+  productEan: String!
+  productUnits: Int!
+  productImageId: String
+  quantity: Int!
+  productTitle: String!
+  categoryTitle: String!
+}
+
+type SuggestedOrderProduct {
+  id: Long!
+  name: String!
+  category: Category!
+  brand: Brand!
+  images: [Image]!
+  price: Price!
+  quantity: Int!
+}
+
+input FavouriteProductInput {
+  accessToken: String!
+  productId: ID!,
+}
+
+type BranchOfficesResponse {
+  headers: Headers!
+  content: [Customer]!
+  total: Int!
+  active: Int!
+}
+
+input GetMyBranchOfficesInput {
+  accessToken: String
+  page: Int
+  size: Int
+}
+
+input GetBranchOfficeInput {
+  accessToken: String!
+  branchOfficeId: ID!
+}
+
+type ProfileSection{
+  id: ID!
+}
+
+type InvoicesResponse {
+  content: [RetailerInformation!]
+  retailerInfoSummary: RetailerInfoSummary
+  cursor: String
+}
+
+type InvoiceRetailerResponse {
+  retailerInformation: [RetailerInformation!]
+  retailerInfoSummary: RetailerInfoSummary
+}
+
+type RetailerInformation {
+  retailerInfoItems: RetailerInformationItems!
+}
+
+type RetailerInfoSummary {
+  volume: Long!
+  value: Money!
+  debit: Money!
+}
+
+type RetailerInformationItems {
+  deliveryDate: TimestampOutput!
+  invoiceNumber: Long!
+  totalValue: Money!
+  invoicePrimaryId: String
+  detail: [RetailerDetail!]!
+}
+
+type RetailerDetail {
+  sku: String!
+  quantity: Int!
+}

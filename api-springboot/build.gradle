@@ -1,0 +1,51 @@
+import org.gradle.api.JavaVersion
+import org.gradle.api.tasks.bundling.Zip
+
+plugins {
+    id "groovy"
+    id "org.springframework.boot"
+}
+
+dependencies {
+    implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE"))
+    implementation(platform("org.springframework.cloud:spring-cloud-sleuth:2.0.4.RELEASE"))
+
+    implementation(project(":api"))
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.logging.log4j" && requested.version <= "2.17.0") {
+            useVersion("2.17.0")
+            because("To avoid RCE vulnerability.")
+        }
+        if (requested.group == "ch.qos.logback" && requested.name == "logback-classic" && requested.version <= "1.2.8") {
+            useVersion("1.2.8")
+            because("To avoid RCE vulnerability.")
+        }
+        if (requested.group == "ch.qos.logback" && requested.name == "logback-core" && requested.version <= "1.2.8") {
+            useVersion("1.2.8")
+            because("To avoid RCE vulnerability.")
+        }
+    }
+}
+
+springBoot {
+    mainClassName = "bff.Main"
+}
+
+task zip(type: Zip) {
+    archiveFileName = 'application.zip'
+    from('build/libs') {
+        include '*.jar'
+    }
+    from 'ebs'
+}
+
+build.dependsOn(zip)
+
+version = ''
+
+
+

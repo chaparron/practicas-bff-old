@@ -1,0 +1,101 @@
+union CommercialPromotionType = Discount | FreeProduct
+
+type CommercialPromotions {
+  discount: Discount
+  freeProduct: FreeProduct
+}
+
+type CommercialPromotion {
+  id: ID!
+  description: String!
+  expiration: TimestampOutput!
+  type: CommercialPromotionType!
+  label(languageTag: LanguageTag!): String!
+  remainingUses: Int!
+  applicationMode: ApplicationMode!
+  linkedProducts: [Int!]!
+}
+
+type MinProductQuantityByProduct {
+  product: Int!
+  quantity: Int!
+}
+
+enum ApplicationMode {
+  SLABBED,
+  PROGRESSIVE,
+  LINEAL
+}
+
+type DiscountStep {
+  from: Int!
+  to: Int!
+  maybeTo: Int
+  value: Money!
+  unitValue: Money!
+  percentage: Float!
+  minQuantityByProducts: [MinProductQuantityByProduct!]!
+}
+
+type Discount {
+  id: ID!
+  description: String!
+  expiration: TimestampOutput!
+  label(languageTag: LanguageTag!): String!
+  remainingUses: Int!
+  progressive: Boolean!
+  applicationMode: ApplicationMode!
+  steps: [DiscountStep!]!
+  linkedProducts: [Int!]!
+}
+
+type FixedQuantityFreeProduct {
+  id: Int!
+  name: String!
+  description: String
+  images(size: ProductImageSize!, take: Int): [String!]!
+  display: Display!
+  quantity: Int!
+}
+
+type MultipliedQuantityFreeProduct {
+  id: Int!
+  name: String!
+  description: String
+  images(size: ProductImageSize!, take: Int): [String!]!
+  display: Display!
+  quantity: Float!
+}
+
+union RewardItem = FixedQuantityFreeProduct | MultipliedQuantityFreeProduct
+
+enum RewardsNodeType {
+  AND
+  OR
+}
+
+type RewardsNode {
+  id: ID!
+  parent: ID
+  type: RewardsNodeType!
+  items: [RewardItem!]
+}
+
+type FreeProductStep {
+  from: Int!
+  to: Int!
+  maybeTo: Int
+  rewards: [RewardsNode!]!
+  minQuantityByProducts: [MinProductQuantityByProduct!]!
+}
+
+type FreeProduct {
+  id: ID!
+  description: String!
+  expiration: TimestampOutput!
+  label(languageTag: LanguageTag!): String!
+  remainingUses: Int!
+  applicationMode: ApplicationMode!
+  steps: [FreeProductStep!]!
+  linkedProducts: [Int!]!
+}

@@ -1,0 +1,50 @@
+input HomeInput {
+  country: String!
+  tags: [String!]
+  fallback: Boolean
+}
+
+input ListingInput {
+  country: String!,
+  tags: [String!],
+  keyword: String,
+  category: Int,
+  brand: Int,
+  tag: String,
+  supplier: Int,
+  favourites: Boolean
+  promoted: Boolean
+}
+
+input ContextInput {
+  accessToken: String
+  coordinates: CoordinatesInput
+}
+
+union Piece = AdBanner | ProductSearch | PreviewProductSearch | Brand | PreviewSupplier
+
+enum AdBannerImageSize {
+  SIZE_1920x314, SIZE_320x162, SIZE_315x135
+}
+
+type AdBanner {
+  id: String!
+  name: String!
+  desktop(size: AdBannerImageSize!): String!
+  mobile(size: AdBannerImageSize!): String!
+  link: String
+}
+
+enum TitleIconSize {
+  SIZE_24x24
+}
+
+type Module {
+  id: String!
+  tag: String!
+  title(languageTag: LanguageTag!): String
+  titleIcon(size: TitleIconSize!): String
+  link: String
+  expiration: TimestampOutput
+  pieces(context: ContextInput!, size: Int): [Piece!]!
+}

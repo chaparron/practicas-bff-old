@@ -1,0 +1,19 @@
+enum UploadDocumentReason {
+    UNSUPPORTED_MEDIA_TYPE
+}
+
+input Document {
+    encodedFile: String!
+    accessToken: String!
+}
+
+type UploadedDocument {
+    id: String
+}
+
+type UploadDocumentFailed {
+    reason: UploadDocumentReason
+}
+
+
+union UploadDocumentResult = UploadDocumentFailed | UploadedDocument

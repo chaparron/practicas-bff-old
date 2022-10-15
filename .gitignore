@@ -1,0 +1,14 @@
+.DS_Store
+.idea
+*.iml
+.gradle
+build
+/out
+api/out
+lib
+devops/.terraform
+bin
+.project
+.settings/
+.classpath
+/.java-version

@@ -1,0 +1,45 @@
+type Promotion {
+    id: ID!,
+    tag: String
+    banner: String
+    banner_mobile: String
+    country_id: String!
+}
+
+type PromotionResponse {
+    content: [Promotion]!
+}
+
+union PromotionResult = PromotionResponse | PromotionFailed
+
+type PromotionFailed {
+    reason: PromotionFailedReason!
+}
+
+enum PromotionFailedReason {
+    INVALID_COUNTRY_ID,
+    INVALID_LOCATION
+}
+
+input PromotionInput{
+    accessToken: String!
+    country_id: String!
+}
+
+
+input GetLandingPromotionInput {
+    accessToken: String!
+    country_id: String!
+}
+
+enum GetLandingPromotionFailedReason {
+    NOT_FOUND
+    INVALID_LOCATION
+    INVALID_COUNTRY_ID
+}
+
+type GetLandingPromotionFailed {
+    reason: GetLandingPromotionFailedReason!
+}
+
+union GetLandingPromotionResult = Promotion | GetLandingPromotionFailed

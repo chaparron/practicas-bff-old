@@ -1,0 +1,13 @@
+plugins {
+    id('org.springframework.boot') version '2.1.7.RELEASE' apply false
+    id('io.spring.dependency-management') version '1.0.4.RELEASE'
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://artifacts20200605212517641800000001.s3-us-west-2.amazonaws.com/maven2' }
+        mavenLocal()
+    }
+}

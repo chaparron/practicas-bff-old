@@ -1,0 +1,97 @@
+type CountryConfigurationEntry {
+  key: String!
+  value: String!
+}
+
+input CountryHomeInput {
+  locale: String!
+}
+
+type Country {
+  id: String!
+  name: String!
+  flag(size: CountryFlagSize!): String!
+  legalUrls: [LegalUrl]!
+  detail:Detail!
+  language:Language!
+  contactInfo:ContactInfo!
+  currency:Currency!
+  fee:Fee!
+  wabiPay:WabiPay!
+  legalDocumentInformation:LegalDocumentInformation!
+  geolocation: Geolocation!
+}
+
+type Detail {
+  countryCode:String!
+  timezone:String!
+}
+
+type Language{
+  language:String!
+  locale:String!
+  direction:String!
+  translations: [CountryTranslation]!
+}
+
+type ContactInfo {
+  whatsappNumber:String!
+  phoneNumber:String!
+  zaloNumber:String
+}
+
+type Currency {
+  symbol:String!
+  code:String!
+}
+
+type CountryTranslation {
+  language:String!
+  value:String!
+}
+
+type WabiPay {
+  enabled:Boolean!
+  creditEnabled:Boolean!
+  moneyEnabled:Boolean!
+  wcToMoneyWhenReleasingEnabled:Boolean!
+  @deprecated(reason: "Must not be used at store, always return false")
+}
+
+type Fee{
+  serviceFeeType:String!
+  serviceFee:Float!
+  displayFeeOnSupplierAdm:Boolean!
+  @deprecated(reason: "Must not be used at store, always return false")
+}
+
+type LegalUrl{
+  type:LegalUrlType!
+  value:String!
+  label:String!
+}
+
+type LegalDocumentInformation{
+  id:String!
+  mask:String!
+  maskRegex:String!
+}
+
+type Geolocation{
+  lat: Float!
+  lng: Float!
+}
+
+enum LegalUrlType {
+  PRIVACY_POLICY,
+  TERMS_AND_CONDITIONS,
+  COOKIES,
+  FAQS,
+  ABOUT,
+  OPERATION,
+  COMPLAINT
+}
+
+enum CountryFlagSize {
+  SIZE_30x20, SIZE_60x40, SIZE_120x80
+}

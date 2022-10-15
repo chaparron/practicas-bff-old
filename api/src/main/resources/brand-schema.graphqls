@@ -1,0 +1,35 @@
+enum BrandLogoSize {
+  SIZE_170x130, SIZE_130x61, SIZE_96x40, SIZE_22x22
+}
+
+type Brand {
+    id: Int!,
+    name: String!,
+    enabled: Boolean
+    logo(size: BrandLogoSize): String
+    country_id: String
+}
+
+
+type GetHomeBrandsResult {
+    brands: [Brand]!
+}
+
+union GetHomeBrandsResponse = GetHomeBrandsResult | GetHomeBrandsFailed
+
+input GetHomeBrandsInput {
+    countryId: String!
+    accessToken: String
+}
+
+enum GetHomeBrandsFailedReason {
+    NOT_FOUND
+    BAD_REQUEST
+    INVALID_COUNTRY_ID
+    INVALID_LOCATION
+    NO_SUPPLIERS_FOUND
+}
+
+type GetHomeBrandsFailed {
+    reason: GetHomeBrandsFailedReason!
+}

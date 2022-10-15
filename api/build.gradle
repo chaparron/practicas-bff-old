@@ -1,0 +1,82 @@
+plugins {
+    id "java-library"
+    id "groovy"
+    id "org.springframework.boot" apply false
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+dependencies {
+    implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE"))
+    implementation(platform("org.springframework.cloud:spring-cloud-sleuth:2.0.4.RELEASE"))
+
+    implementation "com.github.ben-manes.caffeine:caffeine:2.9.2"
+    implementation "wabi2b.sdk:grocery-listing:1248-024ac4a895f91d65333a5025ae1050630d4efb93"
+    implementation "wabi2b.sdk:supplier-credits:10013-5b3ebcb2efd390ddb0fffcc003762f30b7f16055"
+    implementation "wabi2b.sdk:cms:1129-526c7eaa39506ed4f36f7430384d533d9e7cc4fa"
+    implementation "wabi2b:regional-config:1029-e8936196376587d6a2a5f4f89c6ddc995bed4e16"
+    implementation "com.wabi2b:phone-notifier-sdk:10144-76744096d3a1c81c01910dfeb44eff235aa2f690"
+    implementation "wabi2b.sdk:wabi2b-api-sdk:1959-e12cbc005dc532f26157749159e9835369511a45"
+    implementation "com.wabi2b:customers-sdk:10104-34d45cc99836a74e929aa6b689bfe2590c10d87a"
+    implementation "wabi2b:payments-sdk:1359-1d0aad65f021dd884bc0544e88e4e32656d88d21"
+    implementation "wabi2b:third-party-integration:10032-174a757eb2148e06cd2af7a5d543e47ec89778b4"
+    implementation "wabi2b:feature-flags:10037-dcc43a1b3566323e441c71e972a670640a0b1480"
+    implementation "wabi2b:bnpl-credits-sdk:1078-518561568d90a6c2f98f661c161502effc43066d"
+    implementation "com.wabi2b:external-orders-sdk:1056-1d382fd21e481ac5b4cc8d830fb00631b7f48b22"
+    implementation "wabi2b:digital-payments-sdk:1109-ee098af66fe1fac21c8cf54a5e45bed563bac645"
+
+
+    implementation "io.ktor:ktor-client-cio:1.6.5"
+
+    def graphQL = '5.9.0'
+
+    compile 'com.sendgrid:sendgrid-java:4.2.1'
+
+
+    compile "com.graphql-java-kickstart:graphql-spring-boot-starter:$graphQL"
+    compile "com.graphql-java-kickstart:graphiql-spring-boot-starter:$graphQL"
+
+    compile 'com.newrelic.agent.java:newrelic-api:5.14.0'
+    compile 'com.pubnub:pubnub-gson:4.18.0'
+    compile 'org.codehaus.groovy:groovy-all'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.3.1.RELEASE'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation("com.amazonaws:aws-lambda-java-events:3.10.0")
+    implementation("com.amazonaws:aws-java-sdk-sqs:1.12.112")
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.github.tomakehurst:wiremock:2.24.1'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.logging.log4j" && requested.version <= "2.17.0") {
+            useVersion("2.17.0")
+            because("To avoid RCE vulnerability.")
+        }
+        if (requested.group == "ch.qos.logback" && requested.name == "logback-classic" && requested.version <= "1.2.8") {
+            useVersion("1.2.8")
+            because("To avoid RCE vulnerability.")
+        }
+        if (requested.group == "ch.qos.logback" && requested.name == "logback-core" && requested.version <= "1.2.8") {
+            useVersion("1.2.8")
+            because("To avoid RCE vulnerability.")
+        }
+    }
+}
+
+clean {
+    delete 'out'
+}
