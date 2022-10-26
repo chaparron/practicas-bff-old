@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono
 
 interface DigitalPaymentsBridge {
     Mono<List<Provider>> getPaymentProviders(String supplierId, String accessToken)
+    Boolean isDelayed(String supplierOrderId, String accessToken)
 }

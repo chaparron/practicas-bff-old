@@ -67,6 +67,17 @@ class SupplierOrderResolverTest {
     }
 
     @Test
+    void 'Should return true to delay if order is delayed'() {
+        def someSupplierOrder = anySupplierOrder()
+        when(digitalPaymentsBridge.isDelayed(someSupplierOrder.id.toString(), someSupplierOrder.accessToken))
+                .thenReturn(true)
+        def expected = true
+        def result = sut.delay(someSupplierOrder)
+        assert expected == result
+        verify(digitalPaymentsBridge).isDelayed(someSupplierOrder.id.toString(), someSupplierOrder.accessToken)
+    }
+
+    @Test
     void 'Should return only JPMorgan providers'() {
         def expectedSupportedPaymentProviders = [new JPMorganMainPaymentProvider(), new JPMorganUPIPaymentProvider()]
         def someSupplier = anySupplier()

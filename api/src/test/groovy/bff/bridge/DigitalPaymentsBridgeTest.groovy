@@ -49,4 +49,18 @@ class DigitalPaymentsBridgeTest {
 
         Mockito.verify(digitalPaymentsSdk, Mockito.times(1)).getPaymentProviders(anySupplierId, accessToken)
     }
+    @Test
+    void 'Should return cached isDelayed true for anySupplierOrderId delayed'() {
+        def anySupplierOrderId = randomString()
+        def accessToken = randomString()
+
+        Mockito.when(digitalPaymentsSdk.isDelayedSupplierOrder(anySupplierOrderId, accessToken)).thenReturn(Mono.just(true))
+
+        def actual = Mono.just(digitalPaymentsBridge.isDelayed(anySupplierOrderId, accessToken)).block()
+        def expected = Mono.just(true).block()
+        println("\u001b[7m $actual $expected \u001b[0m")
+        assert expected == actual
+
+        Mockito.verify(digitalPaymentsSdk).isDelayedSupplierOrder(anySupplierOrderId, accessToken)
+    }
 }

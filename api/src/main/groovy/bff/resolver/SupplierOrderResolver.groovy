@@ -34,6 +34,10 @@ class SupplierOrderResolver implements GraphQLResolver<SupplierOrder> {
     @Autowired
     private PaymentsBridge paymentsBridge
 
+    Boolean delay(SupplierOrder supplierOrder) {
+        digitalPaymentsBridge.isDelayed(supplierOrder.id.toString(), supplierOrder.accessToken)
+    }
+
     Supplier supplier(SupplierOrder supplierOrder) {
         supplierOrderBridge.getSupplierBySupplierOrderId(supplierOrder.accessToken, supplierOrder.id)
     }

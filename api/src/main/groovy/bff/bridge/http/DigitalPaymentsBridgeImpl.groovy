@@ -36,4 +36,11 @@ class DigitalPaymentsBridgeImpl implements  DigitalPaymentsBridge {
             digitalPaymentsSdk.getPaymentProviders(it, accessToken)
         }
     }
+
+    @Override
+    Boolean isDelayed(String supplierOrderId, String accessToken) {
+        providersCache.get(supplierOrderId) {
+            digitalPaymentsSdk.isDelayedSupplierOrder(it, accessToken)
+        }
+    }
 }

@@ -228,6 +228,7 @@ type SupplierOrder {
   paymentButton: Button!
   payments: [SupplierOrderPaymentV2]!
   defaultPaymentAmount: Float!
+  delay: Boolean!
 }
 
 union Button = SimpleTextButton
