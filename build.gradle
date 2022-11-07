@@ -5,7 +5,6 @@ plugins {
 
 subprojects {
     repositories {
-        mavenLocal()
         mavenCentral()
         jcenter()
         maven { url 'https://artifacts20200605212517641800000001.s3-us-west-2.amazonaws.com/maven2' }

@@ -183,6 +183,22 @@ type Rating {
   percentage: Float
 }
 
+type User2 {
+  name: String,
+  userId: Long,
+  mail: String,
+  country: String,
+  active: Boolean,
+  phone: String,
+  role: Role,
+  createdAt: String,
+  lastLogin: String,
+  orders: [Long]
+}
+
+enum Role {
+  ADMIN, USER, SUPPLIER, TEST
+}
 
 type SupplierOrder {
   id:Int!

@@ -102,6 +102,23 @@ interface CustomerSupplierOrderResult {}
 
 interface CustomerLegalDocumentResult {}
 
+class User2 {
+    String name
+    Long userId
+    String mail
+    String country
+    Boolean active
+    String phone
+    Role role
+    String createdAt
+    String lastLogin
+    List<Long> orders
+}
+
+enum Role {
+    ADMIN, USER, SUPPLIER, TEST
+}
+
 class CancelOrderInput {
     String accessToken
     Integer orderId

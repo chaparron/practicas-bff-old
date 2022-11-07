@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
     id "java-library"
     id "groovy"
@@ -11,7 +13,7 @@ java {
 
 
 dependencies {
-    implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+    implementation(platform(SpringBootPlugin.BOM_COORDINATES))
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE"))
     implementation(platform("org.springframework.cloud:spring-cloud-sleuth:2.0.4.RELEASE"))
 
@@ -29,7 +31,7 @@ dependencies {
     implementation "wabi2b:bnpl-credits-sdk:1078-518561568d90a6c2f98f661c161502effc43066d"
     implementation "com.wabi2b:external-orders-sdk:1056-1d382fd21e481ac5b4cc8d830fb00631b7f48b22"
 //    implementation "wabi2b:digital-payments-sdk:1109-ee098af66fe1fac21c8cf54a5e45bed563bac645"
-    implementation "wabi2b:digital-payments-sdk:SNAPSHOT-2022-10-26-07_30_57"
+    implementation "wabi2b:digital-payments-sdk:SNAPSHOT-2022-11-01-20_45_10"
 
     implementation "io.ktor:ktor-client-cio:1.6.5"
 
